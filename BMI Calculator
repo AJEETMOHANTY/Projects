@@ -1,1 +1,142 @@
+import 'package:flutter/material.dart';
 
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      home: const MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  var wtController = TextEditingController();
+  var ftController = TextEditingController();
+  var inController = TextEditingController();
+  var result = "";
+  var bgcolor = Colors.white;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Center(
+          child: Text(
+            "BMI",
+            style:
+                TextStyle(fontFamily: "FontMain", fontWeight: FontWeight.bold),
+          ),
+        ),
+        backgroundColor: const Color.fromARGB(255, 155, 76, 175),
+      ),
+      body: Container(
+        color: bgcolor,
+        child: Center(
+          child: Container(
+            height: double.infinity,
+            width: 300,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "B.M.I CALCULATOR",
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue),
+                ),
+                TextField(
+                  controller: wtController,
+                  keyboardType: TextInputType.numberWithOptions(),
+                  decoration: InputDecoration(
+                      label: Text("Enter Your Weight In Kg:"),
+                      prefixIcon: Icon(Icons.monitor_weight)),
+                ),
+                TextField(
+                  controller: ftController,
+                  keyboardType: TextInputType.numberWithOptions(),
+                  decoration: InputDecoration(
+                      label: Text("Enter Your Height In ft:"),
+                      prefixIcon: Icon(Icons.height)),
+                ),
+                TextField(
+                  controller: inController,
+                  keyboardType: TextInputType.numberWithOptions(),
+                  decoration: InputDecoration(
+                      label: Text("Enter Your Height In Inch:"),
+                      prefixIcon: Icon(Icons.height_sharp)),
+                ),
+                SizedBox(height: 15),
+                ElevatedButton(
+                    onPressed: () {
+                      var wt = wtController.text;
+                      var ft = ftController.text;
+                      var inch = inController.text;
+
+                      if (wt != "" && ft != "" && inch != "") {
+                        // BMI Calculation Logic.
+                        var iwt = int.parse(wt);
+                        var ift = int.parse(ft);
+                        var iinch = int.parse(inch);
+
+                        var tinch = (ift * 12) + iinch;
+                        var tcm = tinch * 2.54;
+                        var tm = tcm / 100;
+
+                        var bmi = iwt / (tm * tm);
+
+                        // Changing Background Colors And Message Logic.
+                        var msg = "";
+                        if (bmi > 25) {
+                          msg = " You're OverWeight";
+                          bgcolor = Colors.red.shade200;
+                        } else if (bmi < 18) {
+                          msg = " You're UnderWeight";
+                          bgcolor = Colors.yellow.shade200;
+                        } else {
+                          msg = " You're Healthy";
+                          bgcolor = Colors.green.shade200;
+                        }
+
+                        result =
+                            "Your BMI is: ${bmi.toStringAsFixed(2)} \n $msg";
+                        setState(() {});
+                      } else {
+                        print("working");
+                        setState(() {
+                          result = "please fill all the required blanks?";
+                        });
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white),
+                    child: Text("Calculate")),
+                SizedBox(height: 15),
+                Text(
+                  result,
+                  style: TextStyle(fontSize: 18),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
